@@ -1,0 +1,13 @@
+spring:
+    web:
+        locale-resoler: fixed
+        locale: pt_BR
+    mvc:
+        format:
+            date-time: iso
+
+    datasource:
+        url: ${MYSQL_HOST:jdbc:mysql://localhost:3306/ms_user?useSSL=false&allowPublicKeyRetrieval=true}
+        username: ${MYSQL_USERNAME:root}
+        password: ${MYSQL_PASSWORD:123456}
+        driver-class-name: org.postgresql.Driver
