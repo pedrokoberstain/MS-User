@@ -40,4 +40,8 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
+    @PutMapping("/{id}/password")
+    public ResponseEntity<User> updatePassword(Long id, String password) {
+        return ResponseEntity.ok(userService.updatePassword(id, password));
+    }
 }
