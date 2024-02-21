@@ -11,3 +11,11 @@ spring:
         username: ${MYSQL_USERNAME:root}
         password: ${MYSQL_PASSWORD:123456}
         driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5Dialect
+            show_sql: false
