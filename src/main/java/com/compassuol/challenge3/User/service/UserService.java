@@ -17,4 +17,13 @@ public class UserService {
     public User createUser(User user) {
         return repository.save(user);
     }
+
+    public User login(String email, String password) {
+        Optional<User> user = repository.findByEmail(email);
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return user.get();
+        }
+        return null;
+    }
+
 }
