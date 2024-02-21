@@ -26,4 +26,12 @@ public class UserService {
         return null;
     }
 
+    public User getUserbyId(Long id) {
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
+    }
+
 }
