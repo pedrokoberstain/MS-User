@@ -34,18 +34,29 @@ public class UserService {
         return null;
     }
 
-    public User updateUser(User user) {
-        return repository.save(user);
+    public Optional<User> updateUser(Long id, User newUser) {
+        return repository.findById(id)
+                .map(user -> {
+                    user.setFirstName(newUser.getFirstName());
+                    user.setLastName(newUser.getLastName());
+                    user.setCpf(newUser.getCpf());
+                    user.setBirthdate(newUser.getBirthdate());
+                    user.setEmail(newUser.getEmail());
+                    user.setCep(newUser.getCep());
+                    user.setActive(newUser.isActive());
+                    return repository.save(user);
+                });
     }
 
     public User updatePassword(Long id, String password) {
-        Optional<User> user = repository.findById(id);
-        if (user.isPresent()) {
-            user.get().setPassword(password);
-            return repository.save(user.get());
+        Optional<User> optionalUser = repository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(password);
+            return repository.save(user);
+        } else {
+            return null;
         }
-        return null;
     }
-
-
 }
+
