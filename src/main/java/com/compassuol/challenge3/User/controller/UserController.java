@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
@@ -20,6 +21,7 @@ public class UserController {
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
+
     @PostMapping("/login")
     public ResponseEntity<User> login(String email, String password) {
         User user = userService.login(email, password);
@@ -36,12 +38,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(user));
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser) {
+        Optional<User> updatedUser = userService.updateUser(id, newUser);
+        return updatedUser.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<User> updatePassword(Long id, String password) {
-        return ResponseEntity.ok(userService.updatePassword(id, password));
+    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody String password) {
+        User updatedUser = userService.updatePassword(id, password);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
