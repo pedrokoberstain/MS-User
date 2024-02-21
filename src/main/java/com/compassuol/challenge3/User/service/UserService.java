@@ -17,4 +17,35 @@ public class UserService {
     public User createUser(User user) {
         return repository.save(user);
     }
+
+    public User login(String email, String password) {
+        Optional<User> user = repository.findByEmail(email);
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return user.get();
+        }
+        return null;
+    }
+
+    public User getUserbyId(Long id) {
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
+    }
+
+    public User updateUser(User user) {
+        return repository.save(user);
+    }
+
+    public User updatePassword(Long id, String password) {
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            user.get().setPassword(password);
+            return repository.save(user.get());
+        }
+        return null;
+    }
+
+
 }
