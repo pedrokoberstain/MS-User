@@ -35,4 +35,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserbyId(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(user));
+    }
+
 }
