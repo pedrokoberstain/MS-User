@@ -38,4 +38,14 @@ public class UserService {
         return repository.save(user);
     }
 
+    public User updatePassword(Long id, String password) {
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()) {
+            user.get().setPassword(password);
+            return repository.save(user.get());
+        }
+        return null;
+    }
+
+
 }
