@@ -1,8 +1,7 @@
 package com.compassuol.challenge3.User.service;
 
-import com.compassuol.challenge3.User.model.User;
+import com.compassuol.challenge3.User.data.vo.v1.UserVO;
 import com.compassuol.challenge3.User.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,27 +13,27 @@ public class UserService {
     @Autowired
     UserRepository repository;
 
-    public User createUser(User user) {
+    public UserVO createUser(UserVO user) {
         return repository.save(user);
     }
 
-    public User login(String email, String password) {
-        Optional<User> user = repository.findByEmail(email);
+    public UserVO login(String email, String password) {
+        Optional<UserVO> user = repository.findByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             return user.get();
         }
         return null;
     }
 
-    public User getUserbyId(Long id) {
-        Optional<User> user = repository.findById(id);
+    public UserVO getUserbyId(Long id) {
+        Optional<UserVO> user = repository.findById(id);
         if (user.isPresent()) {
             return user.get();
         }
         return null;
     }
 
-    public Optional<User> updateUser(Long id, User newUser) {
+    public Optional<UserVO> updateUser(Long id, UserVO newUser) {
         return repository.findById(id)
                 .map(user -> {
                     user.setFirstName(newUser.getFirstName());
@@ -48,10 +47,10 @@ public class UserService {
                 });
     }
 
-    public User updatePassword(Long id, String password) {
-        Optional<User> optionalUser = repository.findById(id);
+    public UserVO updatePassword(Long id, String password) {
+        Optional<UserVO> optionalUser = repository.findById(id);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+            UserVO user = optionalUser.get();
             user.setPassword(password);
             return repository.save(user);
         } else {
