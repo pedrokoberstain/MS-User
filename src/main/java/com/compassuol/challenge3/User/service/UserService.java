@@ -1,7 +1,11 @@
 package com.compassuol.challenge3.User.service;
 
 import com.compassuol.challenge3.User.data.vo.v1.UserVO;
+import com.compassuol.challenge3.User.mapper.DozerMapper;
+import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
+import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,44 +17,54 @@ public class UserService {
     @Autowired
     UserRepository repository;
 
-    public UserVO createUser(UserVO user) {
-        return repository.save(user);
+    private Mapper mapper = DozerBeanMapperBuilder.buildDefault();
+
+    public UserVO createUser(UserVO userVO) {
+        User user = DozerMapper.parseObject(userVO, User.class);
+        user = repository.save(user);
+        return DozerMapper.parseObject(user, UserVO.class);
     }
 
     public UserVO login(String email, String password) {
-        Optional<UserVO> user = repository.findByEmail(email);
+        Optional<User> user = repository.findByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return user.get();
+            return mapper.map(user.get(), UserVO.class);
         }
         return null;
     }
 
     public UserVO getUserbyId(Long id) {
-        Optional<UserVO> user = repository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
-        }
-        return null;
+        Optional<User> user = repository.findById(id);
+        return user.map(value -> mapper.map(value, UserVO.class)).orElse(null);
     }
 
-    public Optional<UserVO> updateUser(Long id, UserVO newUser) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setFirstName(newUser.getFirstName());
-                    user.setLastName(newUser.getLastName());
-                    user.setCpf(newUser.getCpf());
-                    user.setBirthdate(newUser.getBirthdate());
-                    user.setEmail(newUser.getEmail());
-                    user.setCep(newUser.getCep());
-                    user.setActive(newUser.isActive());
-                    return repository.save(user);
-                });
-    }
-
-    public UserVO updatePassword(Long id, String password) {
-        Optional<UserVO> optionalUser = repository.findById(id);
+    public Optional<User> updateUser(Long id, UserVO newUser) {
+        Optional<User> optionalUser = repository.findById(id);
         if (optionalUser.isPresent()) {
-            UserVO user = optionalUser.get();
+            User user = optionalUser.get();
+            user.setFirstName(newUser.getFirstName());
+            user.setLastName(newUser.getLastName());
+            user.setCpf(newUser.getCpf());
+            user.setBirthdate(newUser.getBirthdate());
+            user.setEmail(newUser.getEmail());
+            user.setCep(newUser.getCep());
+            user.setActive(newUser.isActive());
+
+            // Mapeamos para a entidade User antes de salvar
+            User updatedUserEntity = mapper.map(user, User.class);
+            User savedUserEntity = repository.save(updatedUserEntity);
+
+            // Mapeamos de volta para UserVO antes de retornar
+            return Optional.ofNullable(mapper.map(savedUserEntity, User.class));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public User updatePassword(Long id, String password) {
+        Optional<User> optionalUser = repository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             user.setPassword(password);
             return repository.save(user);
         } else {
