@@ -1,6 +1,6 @@
 package com.compassuol.challenge3.User.controller;
 
-import com.compassuol.challenge3.User.model.User;
+import com.compassuol.challenge3.User.data.vo.v1.UserVO;
 import com.compassuol.challenge3.User.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,14 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserVO> createUser(@Valid @RequestBody UserVO user) {
+        UserVO createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(String email, String password) {
-        User user = userService.login(email, password);
+    public ResponseEntity<UserVO> login(String email, String password) {
+        UserVO user = userService.login(email, password);
         if (user != null) {
             return ResponseEntity.ok(user);
         } else {
@@ -33,20 +33,20 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserbyId(Long id) {
+    public ResponseEntity<UserVO> getUserbyId(Long id) {
         return ResponseEntity.ok(userService.getUserbyId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser) {
-        Optional<User> updatedUser = userService.updateUser(id, newUser);
+    public ResponseEntity<UserVO> updateUser(@PathVariable Long id, @RequestBody UserVO newUser) {
+        Optional<UserVO> updatedUser = userService.updateUser(id, newUser);
         return updatedUser.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody String password) {
-        User updatedUser = userService.updatePassword(id, password);
+    public ResponseEntity<UserVO> updatePassword(@PathVariable Long id, @RequestBody String password) {
+        UserVO updatedUser = userService.updatePassword(id, password);
         if (updatedUser != null) {
             return ResponseEntity.ok(updatedUser);
         } else {
