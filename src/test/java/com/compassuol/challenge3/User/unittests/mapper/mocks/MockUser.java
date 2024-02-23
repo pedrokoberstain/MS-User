@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MockUser {
 
-    public User mockEnntity() {
+    public User mockEntity() {
         return mockEntity(0);
     }
 
@@ -56,6 +56,7 @@ public class MockUser {
         user.setFirstName("Joao");
         user.setId(number.longValue());
         user.setLastName("Silva");
+        user.setPassword("12345678");
         return user;
     }
 }

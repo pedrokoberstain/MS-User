@@ -20,4 +20,8 @@ public class UserUpdateDTO implements Serializable {
     @Email(message = "Invalid email address", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;
     private String cep;
+
+    public String getPassword() {
+        return this.getPassword();
+    }
 }

@@ -15,11 +15,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserCreateDTO implements Serializable {
 
-    @NotBlank(message = "The first name must be at least 3 characters long")
+    private Long id;
+    private boolean active;
+
     private String firstName;
-    @NotBlank(message = "The last name must be at least 3 characters long")
     private String lastName;
-    @NotBlank
     private String cpf;
     private String birthdate;
     @NotBlank
@@ -28,4 +28,20 @@ public class UserCreateDTO implements Serializable {
     private String cep;
     @NotBlank(message = "The password must be at least 6 characters long")
     private String password;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
 }
