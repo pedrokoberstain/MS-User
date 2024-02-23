@@ -1,7 +1,6 @@
 package com.compassuol.challenge3.User.repository;
 
 import com.compassuol.challenge3.User.model.User;
-import com.compassuol.challenge3.User.web.dto.mapper.UserUpdateDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

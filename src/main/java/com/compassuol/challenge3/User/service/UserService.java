@@ -5,7 +5,7 @@ import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
-import com.compassuol.challenge3.User.web.dto.mapper.UserUpdateDTO;
+import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;

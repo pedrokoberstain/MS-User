@@ -46,6 +46,6 @@ public class UserCreateDTO implements Serializable {
     }
 
     public Object getUsername() {
-        return null;
+        return firstName + lastName;
     }
 }
