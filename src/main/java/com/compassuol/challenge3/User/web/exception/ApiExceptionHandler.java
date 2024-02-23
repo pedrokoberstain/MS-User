@@ -1,5 +1,6 @@
 package com.compassuol.challenge3.User.web.exception;
 
+import com.compassuol.challenge3.User.exception.EntityNotFoundException;
 import com.compassuol.challenge3.User.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,20 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(UsernameUniqueViolationException.class)
-    public ResponseEntity<ErrorMessage> handleUsernameUniqueViolationException(UsernameUniqueViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorMessage> uniqueViolationException(UsernameUniqueViolationException ex, HttpServletRequest request) {
         log.error("Api Error - ", ex);
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> entityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 }
