@@ -1,11 +1,12 @@
 package com.compassuol.challenge3.User.service;
 
+import com.compassuol.challenge3.User.exception.EntityNotFoundException;
 import com.compassuol.challenge3.User.exception.UsernameUniqueViolationException;
-import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
-import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
+import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,8 @@ public class UserService {
 
     public Optional<UserCreateDTO> getUserbyId(Long id) {
         Optional<User> user = repository.findById(id);
-        return user.map(value -> Optional.of(DozerMapper.parseObject(value, UserCreateDTO.class))).orElseGet(Optional::empty);
+        return user.map(value -> Optional.of(DozerMapper.parseObject(value, UserCreateDTO.class)))
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Usuário com id %d não encontrado", id)));
     }
 
     public Optional<UserUpdateDTO> updateUser(Long id, UserUpdateDTO newUser) {
