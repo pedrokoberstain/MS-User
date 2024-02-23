@@ -3,6 +3,8 @@ package com.compassuol.challenge3.User.web.controller;
 import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.service.UserService;
+import com.compassuol.challenge3.User.web.dto.mapper.PasswordUpdateDTO;
+import com.compassuol.challenge3.User.web.dto.mapper.UserUpdateDTO;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,43 +29,30 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<UserCreateDTO> login(String email, String password) {
-        UserCreateDTO user = userService.login(email, password);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        Optional<UserCreateDTO> user = userService.login(email, password);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserCreateDTO> getUserbyId(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserbyId(id));
+    public ResponseEntity<UserCreateDTO> getUserById(@PathVariable Long id) {
+        Optional<UserCreateDTO> user = userService.getUserbyId(id);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserCreateDTO UserVO) {
-        Optional<User> updatedUser = userService.updateUser(id, UserVO);
-        if (updatedUser.isPresent()) {
-            return ResponseEntity.ok(updatedUser.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
+    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO user) {
+        Optional<UserUpdateDTO> updatedUser = userService.updateUser(id, user);
+        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody PasswordUpdateRequest request) {
-        boolean passwordUpdated = userService.updatePassword(id, request.getPassword()).isActive();
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO passwordUpdatedDTO) {
+        String newPassword = passwordUpdatedDTO.getPassword();
+        boolean passwordUpdated = userService.updatePassword(id, newPassword);
         if (passwordUpdated) {
             return ResponseEntity.ok("Password updated successfully");
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @Getter
-    @Setter
-    public static class PasswordUpdateRequest {
-        private String password;
     }
 }
