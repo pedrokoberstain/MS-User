@@ -1,5 +1,6 @@
-package com.compassuol.challenge3.User.data.vo.v1;
+package com.compassuol.challenge3.User.web.dto.mapper;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,16 +12,16 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVO implements Serializable {
-
-    private Long id;
+public class UserUpdateDTO implements Serializable {
     private String firstName;
     private String lastName;
     private String cpf;
     private String birthdate;
+    @Email(message = "Invalid email address", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;
     private String cep;
-    private String password;
-    private boolean active;
 
+    public String getPassword() {
+        return this.getPassword();
+    }
 }
