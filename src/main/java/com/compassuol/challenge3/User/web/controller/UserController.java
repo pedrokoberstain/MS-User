@@ -1,13 +1,10 @@
 package com.compassuol.challenge3.User.web.controller;
 
 import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
-import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.service.UserService;
-import com.compassuol.challenge3.User.web.dto.mapper.PasswordUpdateDTO;
-import com.compassuol.challenge3.User.web.dto.mapper.UserUpdateDTO;
+import com.compassuol.challenge3.User.web.dto.PasswordUpdateDTO;
+import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
 import jakarta.validation.Valid;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

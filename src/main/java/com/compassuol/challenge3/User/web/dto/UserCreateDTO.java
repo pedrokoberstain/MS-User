@@ -44,4 +44,8 @@ public class UserCreateDTO implements Serializable {
     public boolean isActive() {
         return this.active;
     }
+
+    public Object getUsername() {
+        return firstName + lastName;
+    }
 }

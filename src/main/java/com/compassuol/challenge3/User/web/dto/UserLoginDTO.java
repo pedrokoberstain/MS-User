@@ -1,4 +1,4 @@
-package com.compassuol.challenge3.User.web.dto.mapper;
+package com.compassuol.challenge3.User.web.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
