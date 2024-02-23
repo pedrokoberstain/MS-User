@@ -32,7 +32,8 @@ public class DozerConverterTest {
         List<User> entityList = mockUser.mockEntityList();
         List<UserCreateDTO> voList = DozerMapper.parseListObjects(entityList, UserCreateDTO.class);
         for (int i = 0; i < entityList.size(); i++) {
-            assertEquals(entityList.get(i).getId(), voList.get(i).getId());
+            assertEquals(entityList.get(i).getId(), voList.get(i)
+                    .getId());
         }
     }
 
