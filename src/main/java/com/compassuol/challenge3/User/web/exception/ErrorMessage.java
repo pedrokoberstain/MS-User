@@ -1,6 +1,7 @@
 package com.compassuol.challenge3.User.web.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
 import java.util.Map;
+
+@Getter
 @Setter
 @ToString
 public class ErrorMessage {
