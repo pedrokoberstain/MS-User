@@ -4,6 +4,8 @@ import com.compassuol.challenge3.User.data.vo.v1.UserVO;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.service.UserService;
 import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserVO> getUserbyId(Long id) {
+    public ResponseEntity<UserVO> getUserbyId(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserbyId(id));
     }
 
@@ -50,12 +52,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody String password) {
-        User updatedUser = userService.updatePassword(id, password);
-        if (updatedUser != null) {
-            return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody PasswordUpdateRequest request) {
+        boolean passwordUpdated = userService.updatePassword(id, request.getPassword()).isActive();
+        if (passwordUpdated) {
+            return ResponseEntity.ok("Password updated successfully");
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Getter
+    @Setter
+    public static class PasswordUpdateRequest {
+        private String password;
     }
 }
