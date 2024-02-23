@@ -1,6 +1,5 @@
 package com.compassuol.challenge3.User.repository;
 
-import com.compassuol.challenge3.User.data.vo.v1.UserVO;
 import com.compassuol.challenge3.User.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

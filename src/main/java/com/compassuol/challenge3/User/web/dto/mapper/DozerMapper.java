@@ -1,4 +1,4 @@
-package com.compassuol.challenge3.User.mapper;
+package com.compassuol.challenge3.User.web.dto.mapper;
 
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;

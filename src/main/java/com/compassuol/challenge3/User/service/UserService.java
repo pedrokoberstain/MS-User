@@ -1,7 +1,7 @@
 package com.compassuol.challenge3.User.service;
 
-import com.compassuol.challenge3.User.data.vo.v1.UserVO;
-import com.compassuol.challenge3.User.mapper.DozerMapper;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
+import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
@@ -19,26 +19,26 @@ public class UserService {
 
     private Mapper mapper = DozerBeanMapperBuilder.buildDefault();
 
-    public UserVO createUser(UserVO userVO) {
+    public UserCreateDTO createUser(UserCreateDTO userVO) {
         User user = DozerMapper.parseObject(userVO, User.class);
         user = repository.save(user);
-        return DozerMapper.parseObject(user, UserVO.class);
+        return DozerMapper.parseObject(user, UserCreateDTO.class);
     }
 
-    public UserVO login(String email, String password) {
+    public UserCreateDTO login(String email, String password) {
         Optional<User> user = repository.findByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return mapper.map(user.get(), UserVO.class);
+            return mapper.map(user.get(), UserCreateDTO.class);
         }
         return null;
     }
 
-    public UserVO getUserbyId(Long id) {
+    public UserCreateDTO getUserbyId(Long id) {
         Optional<User> user = repository.findById(id);
-        return user.map(value -> mapper.map(value, UserVO.class)).orElse(null);
+        return user.map(value -> mapper.map(value, UserCreateDTO.class)).orElse(null);
     }
 
-    public Optional<User> updateUser(Long id, UserVO newUser) {
+    public Optional<User> updateUser(Long id, UserCreateDTO newUser) {
         Optional<User> optionalUser = repository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

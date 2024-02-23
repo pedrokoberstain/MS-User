@@ -1,6 +1,6 @@
 package com.compassuol.challenge3.User.unittests.mapper.mocks;
 
-import com.compassuol.challenge3.User.data.vo.v1.UserVO;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.model.User;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class MockUser {
         return mockEntity(0);
     }
 
-    public UserVO mockVO() {
+    public UserCreateDTO mockVO() {
         return mockVO(0);
     }
 
@@ -24,8 +24,8 @@ public class MockUser {
         return users;
     }
 
-    public List<UserVO> mockVOList() {
-        List<UserVO> users = new ArrayList<>();
+    public List<UserCreateDTO> mockVOList() {
+        List<UserCreateDTO> users = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
             users.add(mockVO(i));
         }
@@ -46,8 +46,8 @@ public class MockUser {
         return user;
     }
 
-    public UserVO mockVO(Integer number) {
-        UserVO user = new UserVO();
+    public UserCreateDTO mockVO(Integer number) {
+        UserCreateDTO user = new UserCreateDTO();
         user.setActive(true);
         user.setBirthdate("01/01/2000");
         user.setCep("00000-000");

@@ -1,6 +1,6 @@
-package com.compassuol.challenge3.User.controller;
+package com.compassuol.challenge3.User.web.controller;
 
-import com.compassuol.challenge3.User.data.vo.v1.UserVO;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.service.UserService;
 import jakarta.validation.Valid;
@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/v1/users")
 public class UserController {
     @Autowired
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserVO> createUser(@Valid @RequestBody UserVO user) {
-        UserVO createdUser = userService.createUser(user);
+    public ResponseEntity<UserCreateDTO> createUser(@Valid @RequestBody UserCreateDTO user) {
+        UserCreateDTO createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserVO> login(String email, String password) {
-        UserVO user = userService.login(email, password);
+    public ResponseEntity<UserCreateDTO> login(String email, String password) {
+        UserCreateDTO user = userService.login(email, password);
         if (user != null) {
             return ResponseEntity.ok(user);
         } else {
@@ -36,12 +36,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserVO> getUserbyId(@PathVariable Long id) {
+    public ResponseEntity<UserCreateDTO> getUserbyId(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserbyId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserVO UserVO) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserCreateDTO UserVO) {
         Optional<User> updatedUser = userService.updateUser(id, UserVO);
         if (updatedUser.isPresent()) {
             return ResponseEntity.ok(updatedUser.get());
