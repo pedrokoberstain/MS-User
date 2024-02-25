@@ -33,19 +33,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @Operation(summary = "Logar um usuário.", description = "Recurso para logar um usuário no sistema."
-            , responses = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Usuário logado com sucesso",
-                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = UserCreateDTO.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Usuário não autorizado",
-                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-    })
-    @PostMapping("/login")
-    public ResponseEntity<UserCreateDTO> login(String email, String password) {
-        Optional<UserCreateDTO> user = userService.login(email, password);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-    }
-
     @Operation(summary = "Recuperar informações de um usuário existente.", description = "Recurso para recuperar um usuário existente através do Id."
             , responses = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
@@ -57,19 +44,6 @@ public class UserController {
     public ResponseEntity<UserCreateDTO> getUserById(@PathVariable Long id) {
         Optional<UserCreateDTO> user = userService.getUserbyId(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @Operation(summary = "Atualizar um usuário existente.", description = "Recurso para atualizar um usuário existente no banco de dados."
-            , responses = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso",
-                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = UserUpdateDTO.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Usuário não encontrado",
-                    content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
-    })
-    @PutMapping("/{id}")
-    public ResponseEntity<UserUpdateDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO user) {
-        Optional<UserUpdateDTO> updatedUser = userService.updateUser(id, user);
-        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Atualizar a senha de um usuário existente.", description = "Recurso para atualizar a senha de um usuário existente no banco de dados."

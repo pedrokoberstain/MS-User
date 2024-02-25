@@ -15,7 +15,6 @@ public class UserCreateDTO implements Serializable {
 
     private Long id;
     private boolean active;
-
     private String firstName;
     private String lastName;
     private String cpf;
