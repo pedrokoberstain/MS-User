@@ -1,9 +1,12 @@
 package com.compassuol.challenge3.User.unittests.mapper.mocks;
 
-import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.model.User;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MockUser {
@@ -35,7 +38,6 @@ public class MockUser {
     public User mockEntity(Integer number) {
         User user = new User();
         user.setActive(true);
-        user.setBirthdate("01/01/2000");
         user.setCep("00000-000");
         user.setCpf("000.000.000-00");
         user.setEmail("maria@email.com");
@@ -43,6 +45,15 @@ public class MockUser {
         user.setId(number.longValue());
         user.setLastName("Oliveira");
         user.setPassword("12345678");
+
+        // Convertendo a string para Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date birthdate = dateFormat.parse("01/01/2000");
+            user.setBirthdate(birthdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return user;
     }
 
