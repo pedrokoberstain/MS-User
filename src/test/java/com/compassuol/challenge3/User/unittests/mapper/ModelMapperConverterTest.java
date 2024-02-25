@@ -1,17 +1,27 @@
 package com.compassuol.challenge3.User.unittests.mapper;
 
-import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
-import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
+import com.compassuol.challenge3.User.config.ModelMapperConfig;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.unittests.mapper.mocks.MockUser;
+import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DozerConverterTest {
+@SpringBootTest
+@ContextConfiguration(classes = {ModelMapperConfig.class})
+public class ModelMapperConverterTest {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     private MockUser mockUser;
 
@@ -23,24 +33,27 @@ public class DozerConverterTest {
     @Test
     public void testParseEntityToVO() {
         User entity = mockUser.mockEntity(0);
-        UserCreateDTO vo = DozerMapper.parseObject(entity, UserCreateDTO.class);
+        UserCreateDTO vo = modelMapper.map(entity, UserCreateDTO.class);
         assertUserEquals(entity, vo);
     }
 
     @Test
     public void testParseEntityListToVOList() {
         List<User> entityList = mockUser.mockEntityList();
-        List<UserCreateDTO> voList = DozerMapper.parseListObjects(entityList, UserCreateDTO.class);
+        List<UserCreateDTO> voList = entityList.stream()
+                .map(entity -> modelMapper.map(entity, UserCreateDTO.class))
+                .collect(Collectors.toList());
         for (int i = 0; i < entityList.size(); i++) {
-            assertEquals(entityList.get(i).getId(), voList.get(i)
-                    .getId());
+            assertEquals(entityList.get(i).getId(), voList.get(i).getId());
         }
     }
 
     @Test
     public void testParseVOListToEntityList() {
         List<UserCreateDTO> voList = mockUser.mockVOList();
-        List<User> entityList = DozerMapper.parseListObjects(voList, User.class);
+        List<User> entityList = voList.stream()
+                .map(vo -> modelMapper.map(vo, User.class))
+                .collect(Collectors.toList());
         for (int i = 0; i < voList.size(); i++) {
             assertEquals(voList.get(i).getId(), entityList.get(i).getId());
         }
