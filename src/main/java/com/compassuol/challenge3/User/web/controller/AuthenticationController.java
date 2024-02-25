@@ -1,8 +1,10 @@
 package com.compassuol.challenge3.User.web.controller;
 
+import com.compassuol.challenge3.User.infra.security.TokenService;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
 import com.compassuol.challenge3.User.web.dto.AuthenticationDTO;
+import com.compassuol.challenge3.User.web.dto.LoginResponseDTO;
 import com.compassuol.challenge3.User.web.dto.RegisterDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,18 @@ public class AuthenticationController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
-            return ResponseEntity.ok().build();
+
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+
+            return ResponseEntity.ok(new LoginResponseDTO(token));
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

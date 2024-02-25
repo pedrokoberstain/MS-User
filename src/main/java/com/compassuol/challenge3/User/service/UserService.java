@@ -6,9 +6,7 @@ import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.repository.UserRepository;
 import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
-import com.compassuol.challenge3.User.web.dto.mapper.DozerMapper;
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,21 +21,22 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository repository;
 
-    private Mapper mapper = DozerBeanMapperBuilder.buildDefault();
+    @Autowired
+    private ModelMapper modelMapper;
 
     public UserCreateDTO createUser(UserCreateDTO userVO) {
         try {
-            User user = DozerMapper.parseObject(userVO, User.class);
+            User user = modelMapper.map(userVO, User.class);
             User savedUser = repository.save(user);
-            return DozerMapper.parseObject(savedUser, UserCreateDTO.class);
+            return modelMapper.map(savedUser, UserCreateDTO.class);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             throw new UsernameUniqueViolationException(String.format("Username '%s' já cadastrado", userVO.getUsername()));
         }
     }
 
-    public Optional<UserCreateDTO> getUserbyId(Long id) {
+    public Optional<UserCreateDTO> getUserById(Long id) {
         Optional<User> user = repository.findById(id);
-        return user.map(value -> Optional.of(DozerMapper.parseObject(value, UserCreateDTO.class)))
+        return user.map(value -> Optional.ofNullable(modelMapper.map(value, UserCreateDTO.class)))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Usuário com id %d não encontrado", id)));
     }
 
@@ -60,7 +59,7 @@ public class UserService implements UserDetailsService {
             }
 
             User updatedUser = repository.save(existingUser);
-            return Optional.of(DozerMapper.parseObject(updatedUser, UserUpdateDTO.class));
+            return Optional.of(modelMapper.map(updatedUser, UserUpdateDTO.class));
         } else {
             return Optional.empty();
         }

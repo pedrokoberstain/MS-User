@@ -1,3 +1,8 @@
+api:
+    security:
+        token:
+            secret: ${API_SECURITY_TOKEN_SECRET:secret}
+
 spring:
     web:
         locale-resoler: fixed
