@@ -46,7 +46,6 @@ public class MockUser {
         user.setLastName("Oliveira");
         user.setPassword("12345678");
 
-        // Convertendo a string para Date
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date birthdate = dateFormat.parse("01/01/2000");
@@ -60,7 +59,6 @@ public class MockUser {
     public UserCreateDTO mockVO(Integer number) {
         UserCreateDTO user = new UserCreateDTO();
         user.setActive(true);
-        user.setBirthdate("01/01/2000");
         user.setCep("00000-000");
         user.setCpf("000.000.000-00");
         user.setEmail("joao@email.com");
@@ -68,6 +66,15 @@ public class MockUser {
         user.setId(number.longValue());
         user.setLastName("Silva");
         user.setPassword("12345678");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date birthdate = dateFormat.parse("01/01/2000");
+            user.setBirthdate(birthdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return user;
     }
+
 }

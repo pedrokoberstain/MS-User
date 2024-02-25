@@ -1,7 +1,6 @@
 package com.compassuol.challenge3.User.web.controller;
 
 import com.compassuol.challenge3.User.service.UserService;
-import com.compassuol.challenge3.User.web.dto.PasswordUpdateDTO;
 import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,7 +80,7 @@ public class UserController {
                     content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @PutMapping("/{id}/password")
-    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody PasswordUpdateDTO passwordUpdatedDTO) {
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody UserUpdateDTO passwordUpdatedDTO) {
         String newPassword = passwordUpdatedDTO.getPassword();
         boolean passwordUpdated = userService.updatePassword(id, newPassword);
         if (passwordUpdated) {
