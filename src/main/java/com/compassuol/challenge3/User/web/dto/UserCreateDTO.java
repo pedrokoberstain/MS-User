@@ -2,12 +2,10 @@ package com.compassuol.challenge3.User.web.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -17,11 +15,10 @@ public class UserCreateDTO implements Serializable {
 
     private Long id;
     private boolean active;
-
     private String firstName;
     private String lastName;
     private String cpf;
-    private String birthdate;
+    private Date birthdate;
     @NotBlank
     @Email(message = "Invalid email address", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;

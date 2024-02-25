@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,12 +17,13 @@ public class UserUpdateDTO implements Serializable {
     private String firstName;
     private String lastName;
     private String cpf;
-    private String birthdate;
+    private Date birthdate;
     @Email(message = "Invalid email address", regexp = "^[A-Za-z0-9+_.-]+@(.+)$")
     private String email;
     private String cep;
+    private String password;
 
     public String getPassword() {
-        return this.getPassword();
+        return this.password;
     }
 }
