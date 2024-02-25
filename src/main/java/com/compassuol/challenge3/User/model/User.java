@@ -2,27 +2,31 @@ package com.compassuol.challenge3.User.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Table(name = "users")
-public class User implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "first_name", nullable = false)
     @Size(min = 3, max = 80, message = "The first name must be at least 3 characters long")
     private String firstName;
@@ -35,9 +39,11 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String cpf;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @NotNull(message = "The birthdate must be provided")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private String birthdate;
+    private Date birthdate;
 
     @Email(message = "Invalid email address")
     @Column(unique = true, nullable = false)
@@ -53,4 +59,38 @@ public class User implements Serializable {
     @NotNull(message = "The user must be active or inactive")
     private boolean active;
 
+    @AssertTrue(message = "The user must be active or inactive")
+    private boolean isActiveValid() {
+        return active == true || active == false;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
 }
