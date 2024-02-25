@@ -26,3 +26,8 @@ spring:
         api-docs:
             path: /docs-ms-user
         packagesToScan: com.compassuol.challenge3.User.web.controller
+
+    api:
+        security:
+            token:
+                secret: ${API_SECURITY_TOKEN_SECRET:secret}
