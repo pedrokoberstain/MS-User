@@ -41,9 +41,19 @@ public class UserController {
                     content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json"))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<UserCreateDTO> getUserById(@PathVariable Long id) {
-        Optional<UserCreateDTO> user = userService.getUserbyId(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<?> getUserById(@PathVariable("id") Long id) {
+        Optional<UserCreateDTO> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserUpdateDTO newUser) {
+        Optional<UserUpdateDTO> updatedUser = userService.updateUser(id, newUser);
+        return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Operation(summary = "Atualizar a senha de um usuário existente.", description = "Recurso para atualizar a senha de um usuário existente no banco de dados."

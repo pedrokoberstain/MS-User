@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Optional<UserCreateDTO> getUserbyId(Long id) {
+    public Optional<UserCreateDTO> getUserById(Long id) {
         Optional<User> user = repository.findById(id);
         return user.map(value -> Optional.of(DozerMapper.parseObject(value, UserCreateDTO.class)))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Usuário com id %d não encontrado", id)));
