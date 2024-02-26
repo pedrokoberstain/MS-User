@@ -1,16 +1,16 @@
 package com.compassuol.challenge3.User.model;
 
 public enum UserRole {
-    ADMIN("ADMIN"),
-    USER("USER");
+    ADMIN("admin"),
+    USER("user");
 
-    private final String role;
+    private String role;
 
-    UserRole(String role) {
+    UserRole (String role){
         this.role = role;
     }
 
-    public String getRole() {
+    public String getRole(){
         return role;
     }
 }

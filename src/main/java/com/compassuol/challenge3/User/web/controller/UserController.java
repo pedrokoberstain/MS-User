@@ -1,6 +1,6 @@
-package com.compassuol.challenge3.User.web.controller;
+/*package com.compassuol.challenge3.User.web.controller;
 
-import com.compassuol.challenge3.User.service.UserService;
+import com.compassuol.challenge3.User.service.AuthorizationService;
 import com.compassuol.challenge3.User.web.dto.UserCreateDTO;
 import com.compassuol.challenge3.User.web.dto.UserUpdateDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/v1/users")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private AuthorizationService userService;
 
     @Operation(summary = "Criar um novo usuário.", description = "Recurso para criar um novo usuário no banco de dados.",
             responses = {
@@ -73,4 +73,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-}
+} */
