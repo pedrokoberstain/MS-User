@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class UserRequestDTO {
+public class UserRequestDto {
     @NotBlank(message = "O primeiro nome é obrigatório e deve ter no mínimo 3 caracteres")
     @Size(min = 3, message = "O primeiro nome deve ter no mínimo 3 caracteres")
     private String firstName;
