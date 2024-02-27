@@ -1,15 +1,18 @@
 package com.compassuol.challenge3.User.service;
 
+import com.compassuol.challenge3.User.exception.EntityNotFoundException;
+import com.compassuol.challenge3.User.exception.PasswordInvalidException;
 import com.compassuol.challenge3.User.exception.ResourceNotFoundEx;
 import com.compassuol.challenge3.User.infra.security.TokenService;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.model.UserRole;
 import com.compassuol.challenge3.User.repository.UserRepository;
-import com.compassuol.challenge3.User.web.dto.AuthenticationDTO;
-import com.compassuol.challenge3.User.web.dto.LoginResponseDTO;
-import com.compassuol.challenge3.User.web.dto.RegisterDTO;
-import com.compassuol.challenge3.User.web.dto.UserResponseDTO;
+import com.compassuol.challenge3.User.web.dto.AuthenticationDto;
+import com.compassuol.challenge3.User.web.dto.LoginResponseDto;
+import com.compassuol.challenge3.User.web.dto.RegisterDto;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +22,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
@@ -38,22 +44,24 @@ public class UserService implements UserDetailsService {
 
     private AuthenticationManager authenticationManager;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email);
     }
 
-    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO data) {
+    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDto data) {
         authenticationManager = context.getBean(AuthenticationManager.class);
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDto(token));
     }
 
 
-    public ResponseEntity<Object> register(RegisterDTO registerDto) {
+    public ResponseEntity<Object> register(RegisterDto registerDto) {
         if (userRepository.findByEmail(registerDto.getEmail()) != null) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
@@ -84,16 +92,35 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    private UserResponseDTO convetToUserResponseDTO(User user) {
-        UserResponseDTO responseDTO = new UserResponseDTO();
-        responseDTO.setFirstName(user.getFirstName());
-        responseDTO.setLastName(user.getLastName());
-        responseDTO.setCpf(user.getCpf());
-        responseDTO.setBirthdate(LocalDate.parse(user.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        responseDTO.setEmail(user.getEmail());
-        responseDTO.setCep(user.getCep());
-        responseDTO.setActive(user.isActive());
+    public User update(Long id, User user) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundEx("User not found")
+        );
 
-        return responseDTO;
+        BeanUtils.copyProperties(user, userToUpdate, "id", "password");
+
+        return userRepository.save(userToUpdate);
+    }
+
+    @Transactional(readOnly = true)
+    public User buscarPorId(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Usuário id=%s não encontrado", id))
+        );
+    }
+
+    @Transactional
+    public User editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
+        if (!novaSenha.equals(confirmaSenha)) {
+            throw new PasswordInvalidException("Nova senha não confere com confirmação de senha.");
+        }
+
+        User user = buscarPorId(id);
+        if (!passwordEncoder.matches(senhaAtual, user.getPassword())) {
+            throw new PasswordInvalidException("Sua senha não confere.");
+        }
+
+        user.setPassword(passwordEncoder.encode(novaSenha));
+        return user;
     }
 }
