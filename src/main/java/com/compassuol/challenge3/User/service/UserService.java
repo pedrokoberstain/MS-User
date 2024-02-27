@@ -1,5 +1,6 @@
 package com.compassuol.challenge3.User.service;
 
+import com.compassuol.challenge3.User.exception.ResourceNotFoundEx;
 import com.compassuol.challenge3.User.infra.security.TokenService;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.model.UserRole;
@@ -7,6 +8,7 @@ import com.compassuol.challenge3.User.repository.UserRepository;
 import com.compassuol.challenge3.User.web.dto.AuthenticationDTO;
 import com.compassuol.challenge3.User.web.dto.LoginResponseDTO;
 import com.compassuol.challenge3.User.web.dto.RegisterDTO;
+import com.compassuol.challenge3.User.web.dto.UserResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
-public class AuthorizationService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     @Autowired
     private ApplicationContext context;
 
@@ -74,5 +76,24 @@ public class AuthorizationService implements UserDetailsService {
         userRepository.save(newUser);
 
         return ResponseEntity.ok().body("User registered successfully");
+    }
+
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundEx("User not found")
+        );
+    }
+
+    private UserResponseDTO convetToUserResponseDTO(User user) {
+        UserResponseDTO responseDTO = new UserResponseDTO();
+        responseDTO.setFirstName(user.getFirstName());
+        responseDTO.setLastName(user.getLastName());
+        responseDTO.setCpf(user.getCpf());
+        responseDTO.setBirthdate(LocalDate.parse(user.getBirthdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        responseDTO.setEmail(user.getEmail());
+        responseDTO.setCep(user.getCep());
+        responseDTO.setActive(user.isActive());
+
+        return responseDTO;
     }
 }
