@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -29,8 +28,8 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "O primeiro nome é obrigatório e deve ter no mínimo 3 caracteres")
     private String firstName;
@@ -97,7 +96,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    // Método para formatar a data de nascimento para o padrão dd/MM/yyyy ao serializar o objeto
     public String getBirthdateFormatted() {
         return birthdate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
