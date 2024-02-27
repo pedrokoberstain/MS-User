@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RegisterDTO {
+public class RegisterDto {
 
     @NotBlank(message = "First name is required")
     private String firstName;
