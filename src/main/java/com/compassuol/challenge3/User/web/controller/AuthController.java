@@ -1,8 +1,8 @@
 package com.compassuol.challenge3.User.web.controller;
 
 import com.compassuol.challenge3.User.service.UserService;
-import com.compassuol.challenge3.User.web.dto.AuthenticationDTO;
-import com.compassuol.challenge3.User.web.dto.RegisterDTO;
+import com.compassuol.challenge3.User.web.dto.AuthenticationDto;
+import com.compassuol.challenge3.User.web.dto.RegisterDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +19,12 @@ public class AuthController {
     UserService authorizationService;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO authetinticationDto) {
+    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDto authetinticationDto) {
         return authorizationService.login(authetinticationDto);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody RegisterDTO registerDto) {
+    public ResponseEntity<Object> register(@RequestBody RegisterDto registerDto) {
         return authorizationService.register(registerDto);
     }
 }
