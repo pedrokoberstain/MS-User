@@ -5,6 +5,10 @@ import com.compassuol.challenge3.User.model.EmissaoNotification;
 import com.compassuol.challenge3.User.service.UserService;
 import com.compassuol.challenge3.User.web.dto.AuthenticationDto;
 import com.compassuol.challenge3.User.web.dto.RegisterDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("v1")
 @RequiredArgsConstructor
+@Tag(name = "AuthController", description = "Endpoints relacionados à autenticação")
 public class AuthController {
 
     @Autowired
@@ -28,15 +33,25 @@ public class AuthController {
     private final MessagePublisher messagePublisher;
     private final UserService userService;
 
+    @Operation(summary = "Autenticar usuário", description = "Autentica um usuário com base nas credenciais fornecidas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário autenticado com sucesso"),
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    })
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDto authetinticationDto) {
-        ResponseEntity<Object> response = authorizationService.login(authetinticationDto);
+    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDto authenticationDto) {
+        ResponseEntity<Object> response = authorizationService.login(authenticationDto);
         if (response.getStatusCode().is2xxSuccessful()) {
-            sendNotification(authetinticationDto.getEmail(), "LOGIN");
+            sendNotification(authenticationDto.getEmail(), "LOGIN");
         }
         return response;
     }
 
+    @Operation(summary = "Registrar usuário", description = "Registra um novo usuário com os dados fornecidos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário registrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterDto registerDto) {
         ResponseEntity<Object> response = authorizationService.register(registerDto);
@@ -58,6 +73,4 @@ public class AuthController {
             e.printStackTrace();
         }
     }
-
-
 }
