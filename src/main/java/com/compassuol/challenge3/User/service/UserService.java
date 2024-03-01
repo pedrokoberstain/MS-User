@@ -3,7 +3,11 @@ package com.compassuol.challenge3.User.service;
 import com.compassuol.challenge3.User.exception.EntityNotFoundException;
 import com.compassuol.challenge3.User.exception.PasswordInvalidException;
 import com.compassuol.challenge3.User.exception.ResourceNotFoundEx;
+import com.compassuol.challenge3.User.exception.SolicitacaoNotificationException;
+import com.compassuol.challenge3.User.infra.mqueue.MessagePublisher;
 import com.compassuol.challenge3.User.infra.security.TokenService;
+import com.compassuol.challenge3.User.model.EmissaoNotification;
+import com.compassuol.challenge3.User.model.ProtocoloSolicitacaoNotification;
 import com.compassuol.challenge3.User.model.User;
 import com.compassuol.challenge3.User.model.UserRole;
 import com.compassuol.challenge3.User.repository.UserRepository;
@@ -28,7 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -41,6 +47,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private final MessagePublisher messagePublisher;
 
     private AuthenticationManager authenticationManager;
 
@@ -57,7 +66,13 @@ public class UserService implements UserDetailsService {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginResponseDto(token));
+        ResponseEntity<Object> response = ResponseEntity.ok(new LoginResponseDto(token));
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            sendNotification(data.getEmail(), "LOGIN");
+        }
+
+        return response;
     }
 
 
@@ -122,5 +137,25 @@ public class UserService implements UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(novaSenha));
         return user;
+    }
+
+    public Object solicitaremissaoNotification(EmissaoNotification emissaoNotification) {
+        try {
+            messagePublisher.solicitarNotification(emissaoNotification);
+            var protocolo = UUID.randomUUID().toString();
+            return new ProtocoloSolicitacaoNotification(protocolo);
+        } catch (Exception e) {
+            throw new SolicitacaoNotificationException(e.getMessage());
+        }
+    }
+
+
+    private void sendNotification(String email, String event) {
+        EmissaoNotification notification = new EmissaoNotification();
+        notification.setEmail(email);
+        notification.setEvent(event);
+        notification.setDate(LocalDateTime.now().toString());
+
+        solicitaremissaoNotification(notification);
     }
 }
