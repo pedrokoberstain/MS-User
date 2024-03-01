@@ -1,6 +1,8 @@
 package com.compassuol.challenge3.User.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,41 +27,52 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Tag(name = "User", description = "Endpoints relacionados aos usuários")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID do usuário gerado automaticamente")
     private Long id;
 
     @NotBlank(message = "O primeiro nome é obrigatório e deve ter no mínimo 3 caracteres")
+    @Schema(description = "Primeiro nome do usuário", required = true)
     private String firstName;
 
     @NotBlank(message = "O sobrenome é obrigatório e deve ter no mínimo 3 caracteres")
+    @Schema(description = "Sobrenome do usuário", required = true)
     private String lastName;
 
     @NotBlank(message = "O CPF é obrigatório")
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Formato de CPF inválido")
     @Column(unique = true)
+    @Schema(description = "CPF do usuário", required = true)
     private String cpf;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(columnDefinition = "DATE")
+    @Schema(description = "Data de nascimento do usuário (formato: dd/MM/yyyy)")
     private LocalDate birthdate;
 
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "Formato de email inválido")
     @Column(unique = true)
+    @Schema(description = "Endereço de email do usuário", required = true)
     private String email;
 
+    @Schema(description = "CEP do usuário")
     private String cep;
 
     @NotBlank(message = "A senha é obrigatória e deve ter no mínimo 6 caracteres")
+    @Schema(description = "Senha do usuário", required = true)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Schema(description = "Função do usuário (ROLE_USER ou ROLE_ADMIN)", required = true)
     private UserRole userRole;
 
     @ColumnDefault("true")
+    @Schema(description = "Status de ativação da conta do usuário (true ou false)")
     private boolean active;
 
     @Override
