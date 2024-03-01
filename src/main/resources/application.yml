@@ -1,33 +1,43 @@
 api:
-    security:
-        token:
-            secret: ${API_SECURITY_TOKEN_SECRET:secret}
+  security:
+    token:
+      secret: ${API_SECURITY_TOKEN_SECRET:secret}
 
 spring:
-    web:
-        locale-resoler: fixed
-        locale: pt_BR
-    mvc:
-        format:
-            date-time: iso
+  web:
+    locale-resolver: fixed
+    locale: pt_BR
+  mvc:
+    format:
+      date-time: iso
 
-    datasource:
-        url: ${MYSQL_HOST:jdbc:mysql://localhost:3306/ms_user?useSSL=false&allowPublicKeyRetrieval=true}
-        username: ${MYSQL_USERNAME:root}
-        password: ${MYSQL_PASSWORD:123456}
-        driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    url: ${MYSQL_HOST:jdbc:mysql://localhost:3306/ms_user?useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-    jpa:
-        hibernate:
-            ddl-auto: update
-        properties:
-            hibernate:
-                format_sql: false
-            show_sql: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+      show_sql: false
 
-    springdoc:
-        swagger-ui:
-            path: /docs-ms-user.html
-        api-docs:
-            path: /docs-ms-user
-        packagesToScan: com.compassuol.challenge3.User.web.controller
+  springdoc:
+    swagger-ui:
+      path: /docs-ms-user.html
+    api-docs:
+      path: /docs-ms-user
+    packagesToScan: com.compassuol.challenge3.User.web.controller
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+mq:
+  queues:
+    notification: notification
