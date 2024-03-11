@@ -1,6 +1,18 @@
 # MS User
 
-O MS User é um microserviço dedicado à gestão de dados de usuários em um sistema. Ele é responsável por armazenar informações dos usuários, como nome, sobrenome, CPF, data de nascimento, e-mail, senha, entre outros dados relevantes.
+O MS User desempenha um papel fundamental na gestão eficiente de dados de usuários em sistemas complexos. Responsável por armazenar e gerenciar informações vitais dos usuários, como nome, sobrenome, CPF, data de nascimento, e-mail, cep, senha e o status da conta, se está ativa (1) ou inativa (0) e tambem um sistema de Role separado entre Admin e Usuário.
+
+## Autenticação e Documentação
+
+Este microserviço implementa um sistema de autenticação robusto, baseado em JWT (JSON Web Tokens), garantindo uma camada de segurança sólida para autenticar usuários e autorizar o acesso aos recursos do sistema. Além disso, a documentação completa e abrangente deste microserviço foi elaborada utilizando o Swagger, facilitando a compreensão, integração e desenvolvimento de novos recursos por outros sistemas.
+
+## Comunicação com RabbitMQ
+
+Para garantir uma comunicação eficaz e assíncrona com outros microsserviços, como o MS Notification e o MS Address, o MS User utiliza o RabbitMQ. Essa integração permite uma troca de mensagens eficiente entre os diferentes componentes do sistema, garantindo um fluxo de dados consistente e confiável.
+
+## Suporte a Banco de Dados
+
+O MS User utiliza o banco de dados MySQL para armazenar e gerenciar os dados dos usuários. Isso proporciona uma base de dados sólida e confiável, adequada para sistemas que exigem escalabilidade, desempenho e integridade dos dados.
 
 ## Endpoints
 
@@ -25,6 +37,7 @@ O microserviço MS User oferece os seguintes endpoints para interação com os d
   "password": "12345678",
   "active": true
 }
+```
 
 ### Validações Necessárias
 
@@ -42,3 +55,6 @@ O microserviço MS User oferece os seguintes endpoints para interação com os d
   "email": "maria@email.com",
   "password": "12345678"
 }
+```
+
+Após o processo de login bem-sucedido, o MS User gera um token de acesso. Esse token concede ao usuário a liberdade de acessar todos os outros endpoints disponíveis no sistema de forma segura e autorizada.
